@@ -3,110 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickOrder - Quản Trị Hệ Thống</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <title>QuickOrder - Admin Console</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-light">
+<body>
+    <header class="admin-header">⚙️ QuickOrder - Hệ Thống Quản Trị</header>
 
-    <!-- Màn hình chờ Loading -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+    <div class="container">
+        <a href="index.html" class="back-link">← Quay về trang chủ Khách hàng</a>
+
+        <!-- QUẢN LÝ QUÁN ĂN (CRUD) -->
+        <section class="card">
+            <h2>🏢 Quản Lý Danh Sách Quán Ăn</h2>
+            <div class="form-group inline-form">
+                <input type="text" id="new-res-name" placeholder="Nhập tên quán mới...">
+                <button class="btn btn-sec" id="btn-add-res">Thêm Quán</button>
+            </div>
+            <div id="admin-res-list"></div>
+        </section>
+
+        <!-- QUẢN LÝ ĐƠN HÀNG -->
+        <section class="card">
+            <h2>📦 Quản Lý Trạng Thái Đơn Hàng</h2>
+            <div id="admin-orders-container"><i>Đang tải danh sách đơn hàng...</i></div>
+        </section>
     </div>
 
-    <!-- Navbar Admin -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="admin.html"><i class="bi bi-shield-lock-fill me-2 text-warning"></i>QuickOrder Admin Portal</a>
-            <a class="btn btn-outline-light btn-sm ms-auto" href="index.html"><i class="bi bi-arrow-left-square me-1"></i>Về trang chủ khách hàng</a>
-        </div>
-    </nav>
-
-    <div class="container my-4">
-        <div class="row g-4">
-            <!-- PHẦN 1: ĐIỀU PHỐI ĐƠN HÀNG TOÀN KHU -->
-            <div class="col-12">
-                <div class="card border-0 rounded-4 shadow-sm">
-                    <div class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
-                        <h4 class="fw-bold text-dark mb-0"><i class="bi bi-card-checklist text-primary me-2"></i>Bảng Điều Phối Đơn Hàng Admin</h4>
-                        <span class="badge bg-success" id="adminPollBadge">Đang Polling Live</span>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Mã đơn</th>
-                                        <th>Khách hàng / SĐT</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Chi tiết món ăn</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Trạng thái</th>
-                                        <th>Thao tác Admin</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adminOrderTableBody">
-                                    <!-- Đổ động liên tục từ Polling -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PHẦN 2: QUẢN LÝ DANH SÁCH CÁC QUÁN ĂN NỘI KHU -->
-            <div class="col-12 col-lg-4">
-                <div class="card border-0 rounded-4 shadow-sm p-3">
-                    <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-plus-circle text-success me-2"></i>Thêm Quán Ăn Mới</h5>
-                    <form id="addRestaurantForm" novalidate>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Tên quán ăn *</label>
-                            <input type="text" id="restName" class="form-control" placeholder="Ví dụ: Cơm gà Hải Nam" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Vị trí khuôn viên *</label>
-                            <input type="text" id="restLoc" class="form-control" placeholder="Ví dụ: Căng tin Ký túc xá tầng 1" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Đường dẫn URL ảnh đại diện quán</label>
-                            <input type="url" id="restImg" class="form-control" placeholder="https://images.unsplash.com/...">
-                        </div>
-                        <button type="submit" class="btn btn-success w-100 fw-bold py-2"><i class="bi bi-cloud-arrow-up-fill me-1"></i>Lưu Lên Hệ Thống</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-12 col-lg-8">
-                <div class="card border-0 rounded-4 shadow-sm p-3">
-                    <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-shop-window text-info me-2"></i>Danh Sách Các Quán Hiện Có</h5>
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Hình ảnh</th>
-                                    <th>Tên quán</th>
-                                    <th>Địa điểm</th>
-                                    <th class="text-center">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminRestaurantTableBody">
-                                <!-- Đổ dữ liệu động -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
-    <!-- Scripts Admin -->
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/admin.js"></script>
