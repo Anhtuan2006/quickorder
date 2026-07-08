@@ -4,159 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuickOrder - Đặt Đồ Ăn Nội Khu</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Custom Style -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <header>🚚 QuickOrder - Campus Delivery</header>
 
-    <!-- Màn hình chờ Loading Toàn cục -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
-    </div>
-
-    <!-- Thanh điều hướng Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary-custom shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
-                <i class="bi bi-bicycle me-2 fs-3"></i> QuickOrder
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto fw-medium">
-                    <li class="nav-item"><a class="nav-link active" href="#" id="navHomeLink">Trang Chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#trackingSection">Theo Dõi Đơn Hàng</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-light text-danger ms-lg-2 px-3 py-1 mt-2 mt-lg-0" href="admin.html"><i class="bi bi-shield-lock-fill me-1"></i>Khu Quản Trị</a></li>
-                </ul>
+    <div class="container">
+        <!-- KHÁCH HÀNG: ĐẶT MÓN -->
+        <section class="card">
+            <h2>🛒 Đặt Đơn Hàng Mới</h2>
+            <div class="form-group">
+                <label for="select-restaurant">Chọn Quán Ăn:</label>
+                <select id="select-restaurant"></select>
             </div>
-        </div>
-    </nav>
+            
+            <label>Chọn Món Ăn:</label>
+            <div id="items-container" class="grid"></div>
 
-    <!-- Khu vực Banner chính -->
-    <div class="bg-white py-4 mb-4 border-bottom shadow-sm">
-        <div class="container text-center">
-            <h1 class="fw-bold text-dark fs-2">Đặt Đồ Ăn Giao Nhanh Ký Túc Xá & Khuôn Viên</h1>
-            <p class="text-muted mb-0">Hệ thống phân phối đồ ăn nội khu siêu tốc dành cho sinh viên và cư dân</p>
-        </div>
-    </div>
-
-    <!-- KHU VỰC TRANG CHỦ CHÍNH -->
-    <main class="container mb-5" id="mainContent">
-        <!-- Khối danh sách quán ăn -->
-        <section id="restaurantSection">
-            <div class="d-flex align-items-center mb-3">
-                <div class="bg-primary-custom p-2 rounded-3 text-white me-2 d-flex"><i class="bi bi-shop fs-5"></i></div>
-                <h2 class="h4 mb-0 fw-bold">Chọn Quán Ăn Nội Khu</h2>
+            <div class="form-group">
+                <label for="order-location">Vị trí giao hàng (Ký túc xá / Toà nhà):</label>
+                <input type="text" id="order-location" placeholder="Ví dụ: Phòng 402 - KTX B">
             </div>
-            <div class="row g-3" id="restaurantList">
-                <!-- Data đổ động từ JavaScript -->
-            </div>
+            <button class="btn" id="btn-submit-order">Đặt Đơn Hàng (Form)</button>
         </section>
 
-        <!-- Khối danh sách món ăn (Mặc định ẩn, hiện ra qua jQuery khi click chọn quán) -->
-        <section id="menuSection" style="display: none;" class="mt-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <button class="btn btn-sm btn-outline-secondary" id="btnBackToRestaurants">
-                    <i class="bi bi-arrow-left-short"></i> Quay lại chọn quán
-                </button>
-                <h3 class="h4 mb-0 fw-bold text-end text-primary-custom" id="selectedRestaurantName">Thực đơn</h3>
-            </div>
-            <div class="row g-3" id="menuList">
-                <!-- Data món ăn đổ động từ JavaScript -->
-            </div>
+        <!-- KHÁCH HÀNG & TÀI XẾ: THEO DÕI ĐƠN HÀNG -->
+        <section class="card">
+            <h2>📋 Theo Dõi Trạng Thái Đơn Hàng <span class="polling-badge">(🔄 Tự động cập nhật 3s)</span></h2>
+            <div id="tracking-container"><i>Đang tải dữ liệu đơn hàng...</i></div>
         </section>
-
-        <!-- Khối Theo dõi đơn hàng (Dành cho cả khách hàng xem trạng thái và tài xế nhận đơn) -->
-        <section id="trackingSection" class="mt-5 pt-4 border-top">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <div class="d-flex align-items-center">
-                    <div class="bg-dark p-2 rounded-3 text-white me-2 d-flex"><i class="bi bi-clock-history fs-5"></i></div>
-                    <h2 class="h4 mb-0 fw-bold">Trạng Thái Đơn Hàng Real-time (Khách hàng & Tài xế)</h2>
-                </div>
-                <span class="badge bg-secondary status-pulse" id="pollingBadge">Đang kết nối...</span>
-            </div>
-            <div class="table-responsive bg-white p-3 rounded-4 shadow-sm">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Mã đơn</th>
-                            <th>Khách hàng / SĐT</th>
-                            <th>Địa chỉ nhận</th>
-                            <th>Chi tiết món</th>
-                            <th>Tổng tiền</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động (Tài xế)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="liveOrderTableBody">
-                        <!-- Polling Fetch đổ dữ liệu vào đây liên tục -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Nút Giỏ hàng nổi góc màn hình (jQuery quản lý hiệu ứng hiển thị) -->
-    <button class="btn btn-primary-custom floating-cart-btn" id="btnFloatingCart" data-bs-toggle="modal" data-bs-target="#cartModal" style="display: none;">
-        <i class="bi bi-bag-heart-fill fs-4"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" id="cartCount">0</span>
-    </button>
-
-    <!-- MODAL GIỎ HÀNG VÀ ĐẶT ĐƠN -->
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-md">
-            <div class="modal-content border-0 rounded-4 shadow-lg">
-                <div class="modal-header border-bottom-0 bg-light rounded-top-4">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-cart3 text-danger me-2"></i>Giỏ hàng của bạn</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body py-3">
-                    <!-- Danh sách sản phẩm trong giỏ -->
-                    <div id="cartItemsList" class="mb-4">
-                        <!-- Đổ động từ JS -->
-                    </div>
-                    <div class="d-flex justify-content-between fw-bold fs-5 mb-4 px-2">
-                        <span>Tổng tiền thanh toán:</span>
-                        <span class="text-primary-custom" id="cartTotalPrice">0đ</span>
-                    </div>
-
-                    <!-- Biểu mẫu Form đặt hàng kèm Inline Validation -->
-                    <form id="checkoutForm" novalidate>
-                        <h6 class="fw-bold mb-3 text-secondary border-bottom pb-2">Thông tin giao nhận đồ ăn</h6>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Họ và tên người nhận *</label>
-                            <input type="text" class="form-control" id="custName" required placeholder="Ví dụ: Nguyễn Văn A">
-                            <div class="invalid-feedback" id="custNameErr">Vui lòng nhập họ tên người nhận.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Số điện thoại liên hệ *</label>
-                            <input type="tel" class="form-control" id="custPhone" required placeholder="Ví dụ: 0912345678">
-                            <div class="invalid-feedback" id="custPhoneErr">Số điện thoại không hợp lệ (Phải đúng 10 số VN).</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Vị trí giao hàng (Số phòng / Tòa nhà / Ký túc xá) *</label>
-                            <input type="text" class="form-control" id="custAddress" required placeholder="Ví dụ: Phòng 402 - Tòa nhà Ký túc xá B">
-                            <div class="invalid-feedback" id="custAddressErr">Vui lòng điền chi tiết vị trí nhận đồ ăn.</div>
-                        </div>
-                        <button type="submit" class="btn btn-primary-custom w-100 py-2.5 rounded-3 fw-bold mt-2">
-                            <i class="bi bi-check-circle-fill me-2"></i> Xác nhận gửi đơn ngay
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Scripts CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
-    <!-- Scripts Dự Án -->
+    <!-- Nhúng mã nguồn JS theo đúng thứ tự phụ thuộc -->
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
